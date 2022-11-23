@@ -1,16 +1,59 @@
 import json
 import random
+import string
 
-VERT_ARR = ['|','/','\\','}','{']
-RAND_VERT_ARR = ['|','/','\\','}','{','!','#','$','&','(',')','?','@','[',']',':',';','<','>']
-RAND_HOZ_ARR = [',','-','.','=','_','~']
+VERT_ARR = ["|", "/", "\\", "}", "{"]
+RAND_VERT_ARR = [
+    "|",
+    "/",
+    "\\",
+    "}",
+    "{",
+    "!",
+    "#",
+    "$",
+    "&",
+    "(",
+    ")",
+    "?",
+    "@",
+    "[",
+    "]",
+    ":",
+    ";",
+    "<",
+    ">",
+]
+RAND_HOZ_ARR = [",", "-", ".", "=", "_", "~"]
+# Check for appropriate characters
+
+
+def validate_input_str(input_str):
+    for i in input_str:
+        if i not in string.ascii_lowercase:
+            return False
+    return True
+
+
+# Check the input
+def validate_input(input_str):
+    if input_str:
+        try:
+            assert validate_input_str(input_str)
+        except AssertionError:
+            raise ValueError(
+                "Input has incorrect characters "
+                f"{string.digits} or {string.punctuation} (actual) : {input_str}"
+            )
+
 
 # Builds ascii text art based on input string - reads ascii_text.json.
 def buildASCII(input_str):
+    validate_input(input_str)
     input_arr = [char for char in input_str]
-    line = ''
+    line = ""
 
-    with open('src/ascii_text.json') as json_file:
+    with open("src/ascii_text.json") as json_file:
         data = json.load(json_file)
 
         # each char in ascii_text.json is an array of 6 strings
@@ -21,13 +64,13 @@ def buildASCII(input_str):
                 # line += randBkgd(str_sec, ['.'])
                 line += str_sec
 
-                # prints for debugging 
+                # prints for debugging
                 # print(str_sec)
                 # pos_arr = getSecElmts(str_sec)
                 # print(pos_arr)
                 # print('\n')
 
-            line += ('\n')
+            line += "\n"
 
     # print in console for proof of concept
     print(line)
@@ -37,15 +80,15 @@ def buildASCII(input_str):
 # characters from RAND_HOZ_ARR and RAND_VERT_ARR.
 def randOutln(str_sec):
     sec_arr = [char for char in str_sec]
-    
+
     for index, element in enumerate(sec_arr):
         if not element.isspace():
-            if element == '_':
+            if element == "_":
                 sec_arr[index] = random.choice(RAND_HOZ_ARR)
             else:
                 sec_arr[index] = random.choice(RAND_VERT_ARR)
 
-    return ''.join(sec_arr)
+    return "".join(sec_arr)
 
 
 # Replaces standard background characters (spaces)
@@ -66,7 +109,7 @@ def randBkgd(str_sec, bkgd_arr):
             else:
                 sec_arr[index] = bkgd_arr[0]
 
-    return ''.join(sec_arr)
+    return "".join(sec_arr)
 
 
 # TODO: Replaces standard fill characters (spaces)
@@ -85,7 +128,7 @@ def getSecElmts(str_sec):
             pos_arr.append(0)
         else:
             pos_arr.append(1)
-    
+
     return pos_arr
 
 
@@ -97,10 +140,10 @@ def fillPos(pos_arr, index):
 
 
 def main():
-    input_str = input('Enter text: ')
+    input_str = input("Enter text: ")
     # TODO: add rand options here, or begin implementation of gui or webpage.
     buildASCII(input_str.lower())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
